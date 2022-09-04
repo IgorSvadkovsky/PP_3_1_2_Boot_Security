@@ -1,11 +1,12 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.model.Role;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
@@ -15,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-//@RequestMapping("/users")
 public class UsersController {
     private UserService userService;
     private RoleService roleService;
@@ -29,12 +29,7 @@ public class UsersController {
     @GetMapping("/admin")
     public String showAllUsers(ModelMap model) {
         List<User> allUsers = userService.getAllUsers();
-//        List<Role> allRoles = roleService.getAllRoles();
-
         model.addAttribute("users", allUsers);
-//        model.addAttribute("roles", allRoles);
-//        System.out.println("ROOOOOLEEEEES: " + allRoles);
-
         return "admin";
     }
 
@@ -46,9 +41,7 @@ public class UsersController {
 
     @PostMapping("/admin")
     public String createOrUpdateUser(@ModelAttribute("user") User user) {
-        user.setPassword((new BCryptPasswordEncoder()).encode(user.getPassword()));
         userService.saveOrUpdateUser(user);
-
         return "redirect:/admin";
     }
 

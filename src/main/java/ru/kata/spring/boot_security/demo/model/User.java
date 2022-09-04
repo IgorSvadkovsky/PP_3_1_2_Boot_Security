@@ -11,7 +11,6 @@ import java.util.Collection;
 public class User implements UserDetails {
 
     @Id
-//    @Column(name = "id", unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -24,14 +23,12 @@ public class User implements UserDetails {
     @Column(name = "age")
     private int age;
 
-//    @Id
     @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "password")
     private String password;
 
-//    @ManyToMany(fetch = FetchType.EAGER)
     @ManyToMany
     @JoinTable(name = "users_roles",
         joinColumns = @JoinColumn(name = "user_id"),

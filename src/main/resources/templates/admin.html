@@ -28,7 +28,8 @@
         <td th:text="${user.getLastName()}" style="border: 1px solid brown"></td>
         <td th:text="${user.getAge()}" style="border: 1px solid brown"></td>
         <td th:text="${user.getEmail()}" style="border: 1px solid brown"></td>
-        <td th:text="${user.getRoles()}" style="border: 1px solid brown"></td>
+<!--        <td th:text="${user.getRoles()}" style="border: 1px solid brown"></td>-->
+        <td style="border: 1px solid brown"><span style="display: inline-block; margin-right: 5px" th:each="role : ${user.getRoles()}" th:text="${role}"/></td>
         <td>
             <a th:href="@{/admin/{id}/edit(id=${user.getId()})}"><input type="button" value="Edit" th:unless="${hideButtons}"></a>
         </td>

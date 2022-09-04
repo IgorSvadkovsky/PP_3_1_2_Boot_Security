@@ -20,11 +20,6 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getUserByEmail(String email) {
-//        return entityManager.find(User.class, username);
-
-//        Query query = entityManager.createQuery(String.format("from User u where u.email = %s", username));
-//        return (User) query.getResultList().get(0);
-
         User user = entityManager.createQuery("SELECT u from User u WHERE u.email = :email", User.class).
                 setParameter("email", email).getSingleResult();
         return user;

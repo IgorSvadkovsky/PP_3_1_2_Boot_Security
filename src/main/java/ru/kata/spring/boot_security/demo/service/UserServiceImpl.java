@@ -6,9 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.dao.RoleDao;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.User;
 
@@ -17,13 +15,12 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     private UserDao userDao;
-    private RoleDao roleDao;
-//    private PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao) {
+    public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
-//        this.roleDao = roleDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -37,11 +34,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-//    @Transactional(propagation = Propagation.REQUIRED, readOnly = true, noRollbackFor = Exception.class)
     @Transactional
-//    @Transactional(value = Transactional.TxType.REQUIRED)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-//        User user = userDao.getUserByUsername(username);
         User user = getUserByEmail(email);
 
         if (user == null) {
@@ -49,17 +43,9 @@ public class UserServiceImpl implements UserService {
         }
 
         Hibernate.initialize(user.getRoles());
-//        user.getAuthorities().size();
-//        System.out.println("GET ROLES: " + user.getRoles());
-//        user.getRoles();
 
         return user;
     }
-
-//    @Override
-//    public User getUserByUsername(String username) {
-//        return userDao.getUserByUsername(username);
-//    }
 
     @Override
     @Transactional
@@ -73,7 +59,22 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void saveOrUpdateUser(User user) {
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        Long id = user.getId();
+
+        if (id == null) {
+            // password for a new user
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        } else {
+            // password for existing user
+            if (user.getPassword().equals("")) {
+                // if password field is empty, use existing password
+                user.setPassword(getUserById(id).getPassword());
+            } else {
+                // otherwise, set encoded password from the field
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+            }
+        }
+
         userDao.saveOrUpdateUser(user);
     }
 
