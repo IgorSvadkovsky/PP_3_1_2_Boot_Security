@@ -3,6 +3,7 @@ package ru.kata.spring.boot_security.demo.dao;
 import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.model.User;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -20,8 +21,11 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getUserByEmail(String email) {
-        User user = entityManager.createQuery("SELECT u from User u WHERE u.email = :email", User.class).
-                setParameter("email", email).getSingleResult();
+        EntityGraph entityGraph = entityManager.getEntityGraph("user-entity-graph");
+        User user = entityManager.createQuery("SELECT u from User u WHERE u.email = :email", User.class)
+                .setParameter("email", email)
+                .setHint("javax.persistence.fetchgraph", entityGraph)
+                .getSingleResult();
         return user;
     }
 

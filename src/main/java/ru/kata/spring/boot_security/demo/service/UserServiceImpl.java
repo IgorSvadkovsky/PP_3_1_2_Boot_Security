@@ -42,8 +42,6 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException("User not found");
         }
 
-        Hibernate.initialize(user.getRoles());
-
         return user;
     }
 

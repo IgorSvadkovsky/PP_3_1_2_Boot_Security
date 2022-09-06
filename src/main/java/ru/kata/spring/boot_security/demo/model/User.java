@@ -6,6 +6,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 
+@NamedEntityGraph(
+        name = "user-entity-graph",
+        attributeNodes = {
+            @NamedAttributeNode("firstName"),
+            @NamedAttributeNode("lastName"),
+            @NamedAttributeNode("age"),
+            @NamedAttributeNode("email"),
+            @NamedAttributeNode("password"),
+            @NamedAttributeNode("roles")
+        }
+)
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
