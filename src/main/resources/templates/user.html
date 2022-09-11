@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+
+  <title>User page</title>
+
+  <style>
+    .logout-link:link {
+      color: gray; text-decoration: none;
+    }
+    .logout-link:visited {
+      color: gray; text-decoration: none;
+    }
+    .logout-link:hover {
+      color: lightgray; text-decoration: none;
+    }
+  </style>
+</head>
+<body class="bg-light" style="max-width: 100%; overflow-x: hidden">
+
+<div class="container-fluid" style="padding: 0; height: 600px">
+
+  <div class="row bg-dark" style="padding: 15px">
+    <div class="col-11" style="color: white">
+      <h5><strong><span th:text="${authenticatedUser.getEmail()}"></span></strong> <span>with roles: </span> <span style="display: inline-block; margin-right: 5px" th:each="role : ${authenticatedUser.getRoles()}" th:text="${role}"/></h5>
+    </div>
+
+    <div class="col-1 text-right">
+      <a th:href="@{/logout}" class="logout-link">Logout</a>
+    </div>
+  </div>
+
+  <div class="row" style="height: 100%">
+
+    <div class="list-group col-2 bg-white" style="padding: 15px 0 0 15px">
+      <a th:href="@{/admin}" sec:authorize="hasRole('ROLE_ADMIN')" class="list-group-item list-group-item-action" aria-current="true" style="border: none; color: blue">
+        Admin
+      </a>
+      <a class="list-group-item list-group-item-action active" aria-current="true" style="border: none">
+        User
+      </a>
+    </div>
+
+    <div class="col-10 bg-light" style="padding: 15px 50px 0 40px">
+
+      <div style="padding: 10px 10px 10px 0"><h1>User information-page</h1></div>
+
+        <div class="bg-white" style="border: 1px solid lightgray">
+
+          <div class="bg-light" style="padding: 10px; border-bottom: 1px solid lightgray">
+            <h4>About user</h4>
+          </div>
+
+          <div style="padding: 20px">
+            <table class="table table-striped bg-white">
+              <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Age</th>
+                <th scope="col">Email</th>
+                <th scope="col">Role</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <th scope="row" th:text="${authenticatedUser.getId()}"></th>
+                <td th:text="${authenticatedUser.getFirstName()}"></td>
+                <td th:text="${authenticatedUser.getLastName()}"></td>
+                <td th:text="${authenticatedUser.getAge()}"></td>
+                <td th:text="${authenticatedUser.getEmail()}"></td>
+                <td><span style="display: inline-block; margin-right: 5px" th:each="role : ${authenticatedUser.getRoles()}" th:text="${role}"/></td>
+              </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+        </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Пакет jQuery и Bootstrap (включает Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+
+</body>
+</html>
