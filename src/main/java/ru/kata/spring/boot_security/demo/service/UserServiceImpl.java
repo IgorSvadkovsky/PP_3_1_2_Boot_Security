@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,12 +28,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(long id) {
-        return userDao.getUserById(id);
+        return userDao.findById(id).get();
     }
 
     @Override
     public User getUserByEmail(String email) {
-        return userDao.getUserByEmail(email);
+        return userDao.findUserByEmail(email).get();
     }
 
     @Override
@@ -52,7 +53,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(long id) {
         User user = getUserById(id);
         if (user != null) {
-            userDao.deleteUser(id);
+            userDao.deleteById(id);
         }
     }
 
@@ -75,12 +76,12 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        userDao.saveOrUpdateUser(user);
+        userDao.save(user);
     }
 
     @Override
     public List<User> getAllUsers() {
-        return userDao.getAllUsers();
+        return userDao.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     @Override
