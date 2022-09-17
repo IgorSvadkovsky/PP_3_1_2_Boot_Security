@@ -85,22 +85,22 @@
                                     <th scope="col">Delete</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="usersTableRow">
 
-                                <tr th:each="user : ${users}">
-                                    <th scope="row" th:text="${user.getId()}"></th>
-                                    <td th:text="${user.getFirstName()}"></td>
-                                    <td th:text="${user.getLastName()}"></td>
-                                    <td th:text="${user.getAge()}"></td>
-                                    <td th:text="${user.getEmail()}"></td>
-                                    <td><span style="display: inline-block; margin-right: 5px" th:each="role : ${user.getRoles()}" th:text="${role}"/></td>
-                                    <td>
-                                        <button type="button" class="btn btn-info" data-toggle="modal" th:attr="data-target=${'#editWindow'+user.getId()}" data-row="${user}">Edit</button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-danger" data-toggle="modal" th:attr="data-target=${'#deleteWindow'+user.getId()}" data-row="${user}">Delete</button>
-                                    </td>
-                                </tr>
+<!--                                <tr th:each="user : ${users}">-->
+<!--                                    <th scope="row" th:text="${user.getId()}"></th>-->
+<!--                                    <td th:text="${user.getFirstName()}"></td>-->
+<!--                                    <td th:text="${user.getLastName()}"></td>-->
+<!--                                    <td th:text="${user.getAge()}"></td>-->
+<!--                                    <td th:text="${user.getEmail()}"></td>-->
+<!--                                    <td><span style="display: inline-block; margin-right: 5px" th:each="role : ${user.getRoles()}" th:text="${role}"/></td>-->
+<!--                                    <td>-->
+<!--                                        <button type="button" class="btn btn-info" data-toggle="modal" th:attr="data-target=${'#editWindow'+user.getId()}" data-row="${user}">Edit</button>-->
+<!--                                    </td>-->
+<!--                                    <td>-->
+<!--                                        <button type="button" class="btn btn-danger" data-toggle="modal" th:attr="data-target=${'#deleteWindow'+user.getId()}" data-row="${user}">Delete</button>-->
+<!--                                    </td>-->
+<!--                                </tr>-->
 
                                 </tbody>
                             </table>
@@ -235,31 +235,32 @@
 
                         <div class="col-3 offset-4  text-center" style="padding: 20px">
 
-                            <form th:method="POST" th:action="@{/admin}">
+<!--                            <form th:method="POST" th:action="@{/admin}">-->
+                            <form id="addNewUserForm">
                                 <div class="form-group">
                                     <label for="first_name"><strong>First name</strong></strong></label>
-                                    <input type="text" class="form-control" th:name="firstName" id="first_name" placeholder="First name">
+                                    <input type="text" class="form-control" id="first_name" placeholder="First name">
                                 </div>
                                 <div class="form-group">
                                     <label for="last_name"><strong>Last name</strong></label>
-                                    <input type="text" class="form-control" th:name="lastName" id="last_name" placeholder="Last name">
+                                    <input type="text" class="form-control" id="last_name" placeholder="Last name">
                                 </div>
                                 <div class="form-group">
                                     <label for="age"><strong>Age</strong></label>
-                                    <input required type="number" min="0" class="form-control" th:name="age" id="age" placeholder="Age">
+                                    <input required type="number" min="0" class="form-control" id="age" placeholder="Age">
                                 </div>
                                 <div class="form-group">
                                     <label for="email"><strong>Email</strong></label>
-                                    <input required type="email" class="form-control" th:name="email" id="email" placeholder="Email">
+                                    <input required type="email" class="form-control" id="email" placeholder="Email">
                                 </div>
                                 <div class="form-group">
                                     <label for="password"><strong>Password</strong></label>
-                                    <input required type="password" class="form-control" th:name="password" id="password" placeholder="Password">
+                                    <input required type="password" class="form-control" id="password" placeholder="Password">
                                 </div>
                                 <div class="form-group">
                                     <label for="role"><strong>Role</strong></label>
                                     <select multiple required class="form-control" name="roleIds" id="role">
-                                        <option th:each="role : ${allRoles}" th:value="${role.id}" th:name="roles" th:text="${role}"></option>
+                                        <option th:each="role : ${allRoles}" th:value="${role.id} + '&&' + ${role.name}" th:name="roles" th:text="${role}"></option>
                                     </select>
                                 </div>
 
@@ -284,6 +285,8 @@
 <!-- Пакет jQuery и Bootstrap (включает Popper) -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="app.js"></script>
 
 </body>
 </html>
