@@ -43,8 +43,8 @@ public class RESTController {
     }
 
     @DeleteMapping("/users/{id}")
-    public String deleteUser(@PathVariable("id") int id) {
+    public void deleteUser(@PathVariable("id") int id) {
         userService.deleteUser(id);
-        return "User was deleted";
+//        return "User was deleted";
     }
 }

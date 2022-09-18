@@ -5,45 +5,36 @@ const lastNameAddValue = document.getElementById('last_name')
 const ageAddValue = document.getElementById('age')
 const emailAddValue = document.getElementById('email')
 const passwordAddValue = document.getElementById('password')
+const deleteBtnModal = document.getElementById('deleteBtnModal');
 const url = "http://localhost:8080/api/users";
-let output = '';
+let usersTableRowContent = '';
 
 const renderUsersTable = (users) => {
     users.forEach(user => {
-        output += `
+        usersTableRowContent += `
             <tr>
-                <th scope="row">${user.id}</th>
-                <td>${user.firstName}</td>
-                <td>${user.lastName}</td>
-                <td>${user.age}</td>
-                <td>${user.email}</td>
-                <td>${getRoles(user)}</td>
+                <th scope="row" id="userId">${user.id}</th>
+                <td id="userFirstName">${user.firstName}</td>
+                <td id="userLastName">${user.lastName}</td>
+                <td id="userAge">${user.age}</td>
+                <td id="userEmail">${user.email}</td>
+                <td id="userRoles">${getRoles(user)}</td>
                 <td>
-                    <button type="button" class="btn btn-info" data-toggle="modal">Edit</button>
+                    <button type="button" class="btn btn-info editBtnUsersTable" data-toggle="modal">Edit</button>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-danger" data-toggle="modal">Delete</button>
+                    <button type="button" class="btn btn-danger deleteBtnUsersTable" data-toggle="modal" data-target="#deleteWindow">Delete</button>
                 </td>
             </tr>
             `;
     })
-    usersTableRow.innerHTML = output;
+    usersTableRow.innerHTML = usersTableRowContent;
 }
 
 // show all users
 fetch(url)
     .then(response => response.json())
     .then(users => renderUsersTable(users))
-
-function getRoles(user) {
-    let userRoles = "";
-    for (let role of user.roles) {
-        if (role.name) {
-            userRoles += role.name.replace("ROLE_", "") + " ";
-        }
-    }
-    return userRoles;
-}
 
 // add new user
 addNewUserForm.addEventListener('submit', (e) => {
@@ -68,7 +59,39 @@ addNewUserForm.addEventListener('submit', (e) => {
             dataArr.push(data);
             renderUsersTable(dataArr);
         })
-})
+});
+
+// delete user
+deleteBtnModal.addEventListener('click', () => {
+    let id = $("#id_delete").val();
+    console.log(id);
+
+    // $("#usersTableRow").empty();
+
+    fetch(`${url}/${id}`, {
+        method: 'DELETE',
+    })
+        .then(response => response.text())
+        // .then(() => location.reload())
+
+
+        // .then(() => {
+        //     // $("#usersTable").load("admin.html #usersTable");
+        //     $(".table").load(location.href + ' .table');
+        // })
+
+
+});
+
+function getRoles(user) {
+    let userRoles = "";
+    for (let role of user.roles) {
+        if (role.name) {
+            userRoles += role.name.replace("ROLE_", "") + " ";
+        }
+    }
+    return userRoles;
+}
 
 function createJsonWithRoles(array) {
     let result = [];
@@ -89,3 +112,28 @@ function createJsonWithRoles(array) {
 
     return JSON.stringify(result);
 }
+
+// fill delete modal window with data
+$(function () {
+    $("#usersTableRow").on("click", "button.deleteBtnUsersTable", function (e) {
+        const id = $(this).parents("tr").find("#userId").text();
+        const firstName = $(this).parents("tr").find("#userFirstName").text();
+        const lastName = $(this).parents("tr").find("#userLastName").text();
+        const age = $(this).parents("tr").find("#userAge").text();
+        const email = $(this).parents("tr").find("#userEmail").text();
+        const roles = $(this).parents("tr").find("#userRoles").text();
+
+        $("#id_delete").val(id);
+        $("#first_name_delete").val(firstName);
+        $("#last_name_delete").val(lastName);
+        $("#age_delete").val(age);
+        $("#email_delete").val(email);
+        $("#role_delete").val(roles.split(" "));
+
+        // var element = document.getElementById('role_delete');
+        // var values = roles.split(" ");
+        // for (var i = 0; i < element.options.length; i++) {
+        //     element.options[i].selected = values.indexOf(element.options[i].value) >= 0;
+        // }
+    });
+});
