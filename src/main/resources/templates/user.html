@@ -28,6 +28,7 @@
 
   <div class="row bg-dark" style="padding: 15px">
     <div class="col-11" style="color: white">
+      <p id="authenticatedUserId" hidden th:text="${authenticatedUser.getId()}"></p>
       <h5><strong><span th:text="${authenticatedUser.getEmail()}"></span></strong> <span>with roles: </span> <span style="display: inline-block; margin-right: 5px" th:each="role : ${authenticatedUser.getRoles()}" th:text="${role}"/></h5>
     </div>
 
@@ -69,16 +70,7 @@
                 <th scope="col">Role</th>
               </tr>
               </thead>
-              <tbody>
-              <tr>
-                <th scope="row" th:text="${authenticatedUser.getId()}"></th>
-                <td th:text="${authenticatedUser.getFirstName()}"></td>
-                <td th:text="${authenticatedUser.getLastName()}"></td>
-                <td th:text="${authenticatedUser.getAge()}"></td>
-                <td th:text="${authenticatedUser.getEmail()}"></td>
-                <td><span style="display: inline-block; margin-right: 5px" th:each="role : ${authenticatedUser.getRoles()}" th:text="${role}"/></td>
-              </tr>
-              </tbody>
+              <tbody id="authenticatedUserTableRow"></tbody>
             </table>
 
           </div>
@@ -95,7 +87,7 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
 
-<script type="text/javascript" src="app.js"></script>
+<script type="text/javascript" src="user.js"></script>
 
 </body>
 </html>

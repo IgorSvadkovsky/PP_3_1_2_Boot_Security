@@ -31,6 +31,7 @@
 
     <div class="row bg-dark" style="padding: 15px">
         <div class="col-11" style="color: white">
+            <p id="authenticatedUserId" hidden th:text="${authenticatedUser.getId()}"></p>
             <h5><strong><span th:text="${authenticatedUser.getEmail()}"></span></strong> <span>with roles: </span> <span style="display: inline-block; margin-right: 5px" th:each="role : ${authenticatedUser.getRoles()}" th:text="${role}"/></h5>
         </div>
 
@@ -54,7 +55,7 @@
 
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#all_users" role="tab" data-toggle="tab">Users table</a>
+                    <a class="nav-link active" href="#all_users" role="tab" data-toggle="tab" id="usersTableTabLink">Users table</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#new_user" role="tab" data-toggle="tab">New User</a>
@@ -85,28 +86,11 @@
                                     <th scope="col">Delete</th>
                                 </tr>
                                 </thead>
-                                <tbody id="usersTableRow">
-
-<!--                                <tr th:each="user : ${users}">-->
-<!--                                    <th scope="row" th:text="${user.getId()}"></th>-->
-<!--                                    <td th:text="${user.getFirstName()}"></td>-->
-<!--                                    <td th:text="${user.getLastName()}"></td>-->
-<!--                                    <td th:text="${user.getAge()}"></td>-->
-<!--                                    <td th:text="${user.getEmail()}"></td>-->
-<!--                                    <td><span style="display: inline-block; margin-right: 5px" th:each="role : ${user.getRoles()}" th:text="${role}"/></td>-->
-<!--                                    <td>-->
-<!--                                        <button type="button" class="btn btn-info" data-toggle="modal" th:attr="data-target=${'#editWindow'+user.getId()}" data-row="${user}">Edit</button>-->
-<!--                                    </td>-->
-<!--                                    <td>-->
-<!--                                        <button type="button" class="btn btn-danger" data-toggle="modal" th:attr="data-target=${'#deleteWindow'+user.getId()}" data-row="${user}">Delete</button>-->
-<!--                                    </td>-->
-<!--                                </tr>-->
-
-                                </tbody>
+                                <tbody id="usersTableRow"></tbody>
                             </table>
 
-                            <!-- Модальные окна редактирования -->
-                            <div class="modal fade" th:each="user : ${users}" th:attr="id=${'editWindow' + user.getId()}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="editWindowLabel" aria-hidden="true">
+                            <!-- Модальное окно редактирования -->
+                            <div class="modal fade" id="editWindow" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="editWindowLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -118,35 +102,36 @@
                                         <div class="modal-body">
                                             <div class="col-6 offset-3 text-center">
 
-                                                <form th:method="POST" th:action="@{/admin}" th:object="${user}" th:attr="id=${'editForm' + user.getId()}">
+<!--                                                <form th:method="POST" th:action="@{/admin}" th:object="${user}" th:attr="id=${'editForm' + user.getId()}">-->
+                                                <form id="editUserForm">
                                                     <div class="form-group">
                                                         <label for="id_edit"><strong>ID</strong></strong></label>
-                                                        <input type="text" class="form-control" th:value="*{id}" th:name="id" id="id_edit" readonly>
+                                                        <input type="text" class="form-control" id="id_edit" readonly>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="first_name_edit"><strong>First name</strong></strong></label>
-                                                        <input type="text" class="form-control" th:value="*{firstName}" th:name="firstName" id="first_name_edit">
+                                                        <input type="text" class="form-control" id="first_name_edit">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="last_name_edit"><strong>Last name</strong></label>
-                                                        <input type="text" class="form-control" th:value="*{lastName}" th:name="lastName" id="last_name_edit">
+                                                        <input type="text" class="form-control" id="last_name_edit">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="age_edit"><strong>Age</strong></label>
-                                                        <input type="number" min="0" class="form-control" th:value="*{age}" th:name="age" id="age_edit">
+                                                        <input required type="number" min="0" class="form-control" id="age_edit">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="email_edit"><strong>Email</strong></label>
-                                                        <input type="email" class="form-control" th:value="*{email}" th:name="email" id="email_edit">
+                                                        <input required type="email" class="form-control" id="email_edit">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="password_edit"><strong>Password</strong></label>
-                                                        <input type="password" class="form-control" th:name="password" id="password_edit">
+                                                        <input type="password" class="form-control" id="password_edit">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="role_edit"><strong>Role</strong></label>
-                                                        <select class="form-control" multiple="multiple" name="roleIds">
-                                                            <option th:each="role : ${allRoles}" th:selected="${user.getRoles().contains(role)}" th:value="${role.id}" th:name="roles" th:text="${role}" id="role_edit"></option>
+                                                        <select required class="form-control" multiple="multiple" id="role_edit">
+                                                            <option th:each="role : ${allRoles}" th:value="${role.id} + '&&' + ${role.name}" th:name="roles" th:text="${role}"></option>
                                                         </select>
                                                     </div>
                                                 </form>
@@ -156,7 +141,7 @@
 
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="submit" th:attr="form=${'editForm' + user.getId()}" class="btn btn-primary">Edit</button>
+                                            <button type="submit" class="btn btn-primary" id="editBtnModal">Edit</button>
                                         </div>
 
                                     </div>
@@ -209,9 +194,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-<!--                                            <form th:method="POST" th:action="@{/admin/{id}(id=${user.getId()})}">-->
                                                 <button type="submit" class="btn btn-danger" id="deleteBtnModal">Delete</button>
-<!--                                            </form>-->
                                         </div>
                                     </div>
                                 </div>
@@ -233,7 +216,6 @@
 
                         <div class="col-3 offset-4  text-center" style="padding: 20px">
 
-<!--                            <form th:method="POST" th:action="@{/admin}">-->
                             <form id="addNewUserForm">
                                 <div class="form-group">
                                     <label for="first_name"><strong>First name</strong></strong></label>
@@ -285,7 +267,7 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
 
-<script type="text/javascript" src="app.js"></script>
+<script type="text/javascript" src="admin.js"></script>
 
 </body>
 </html>
